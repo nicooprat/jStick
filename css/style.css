@@ -29,9 +29,11 @@
 	position: fixed;
 	top: 0;
 	width: 100%;
+	z-index: 3;
 }
 
 #header {
+	display: none;
 	height: 150px;
 	padding: 150px 0 0 0;
 	background: url(img/stripes.png);
@@ -40,15 +42,23 @@
 #nav {
 	height: 50px;
 	background: black;
+	z-index: 2;
 }
 
 #content {
-	height: 850px;
+	height: 550px;
 	padding: 150px 0 0 0;
 	background: url(img/grain.png);
 }
 
-#header , #nav , #content {
+#footer {
+	height: 1000px;
+	padding: 150px 0 0 0;
+	background: url(img/stripes.png);
+	border-top: 1px solid #333;
+}
+
+#header , #nav , #content , #footer {
 	font-family: Georgia;
 	font-size: 24px;
 	line-height: 50px;
