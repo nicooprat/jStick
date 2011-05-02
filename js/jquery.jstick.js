@@ -16,6 +16,7 @@ jQuery.fn.jStick = function( settings ) {
 	var boolUnstuck = 		false;
 	var boolLimit =			true;
 	var limit =				( settings.limit ) ? settings.limit : false;
+	var cloneClass =		( settings.cloneClass ) ? settings.cloneClass : 'the_clone';
 	
 	// When user scrolls...
 	$(window).scroll(function() {
@@ -48,11 +49,11 @@ jQuery.fn.jStick = function( settings ) {
 			else
 			{
 				// Clone element
-				if( $('.the_clone').size() === 0 ) {
+				if( $('.'+cloneClass).size() === 0 ) {
 					
 					el
 					.clone()
-					.addClass('the_clone')
+					.addClass(cloneClass)
 					.css({
 						'visibility':'hidden'
 					})
@@ -90,7 +91,7 @@ jQuery.fn.jStick = function( settings ) {
 		{
 			
 			// Remove clone
-			if( $('.the_clone').size() > 0 ) $('.the_clone').remove();
+			if( $('.'+cloneClass).size() > 0 ) $('.'+cloneClass).remove();
 			
 			// Unstick element
 			el
