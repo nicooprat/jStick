@@ -14,103 +14,108 @@ jQuery.fn.jStick = function( settings ) {
 	var boolLimit =			true;
 	var limit =				( settings.limit ) ? settings.limit : false;
 	var cloneClass =		( settings.cloneClass ) ? settings.cloneClass : 'the_clone';
+	var cancelIfTooHigh =		( settings.cancelIfTooHigh ) ? settings.cancelIfTooHigh : true;
 	
 	// When user scrolls...
 	$(window).scroll(function() {
 	
-		if ( $(this).scrollTop() > top - offset )
-		{
-			// Limit reached
-			if ( limit && $(this).scrollTop() + offset + el.outerHeight() > limit )
+		if( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) {
+		
+			if ( $(this).scrollTop() > top - offset )
 			{
-				// Fix element to the limit
-				el
-				.css({
-					'position': 'absolute',
-					'top': limit - el.outerHeight(),
-					'left': left
-				})
-				.addClass( class );
-				
-				// Callback onLimitReached
-				if ( typeof settings.onLimitReached == 'function' && boolLimit )
+				// Limit reached
+				if ( limit && $(this).scrollTop() + offset + el.outerHeight() > limit )
 				{
-					settings.onLimitReached.call(this);
-					boolLimit = false;
-				}
+					// Fix element to the limit
+					el
+					.css({
+						'position': 'absolute',
+						'top': limit - el.outerHeight(),
+						'left': left
+					})
+					.addClass( class );
 					
-				// Enable other callbacks
-				boolStuck = true;
-				boolUnstuck = true;
+					// Callback onLimitReached
+					if ( typeof settings.onLimitReached == 'function' && boolLimit )
+					{
+						settings.onLimitReached.call(this);
+						boolLimit = false;
+					}
+						
+					// Enable other callbacks
+					boolStuck = true;
+					boolUnstuck = true;
+				}
+				// Stick it !
+				else
+				{
+					// Clone element
+					if( $('.'+cloneClass).size() === 0 ) {
+						
+						el
+						.clone()
+						.addClass(cloneClass + ' ' + class)
+						.css({
+							'visibility':'hidden'
+						})
+						.insertBefore(el);
+						
+					}
+					
+					// Stick element to top
+					el
+					.css({
+						'position': 'fixed',
+						'top': offset,
+						'left': left,
+						'width': el.width()
+					})
+					.addClass( class );
+					
+					// Callback onStick
+					if ( typeof settings.onStick == 'function' && boolStuck )
+					{
+						settings.onStick.call(this);
+						boolStuck = false;
+					}
+					
+					// Enable other callbacks
+					boolUnstuck = true;
+					boolLimit = true;
+				}
+			
 			}
-			// Stick it !
+			// Unstick it !
 			else
 			{
-				// Clone element
-				if( $('.'+cloneClass).size() === 0 ) {
-					
-					el
-					.clone()
-					.addClass(cloneClass + ' ' + class)
-					.css({
-						'visibility':'hidden'
-					})
-					.insertBefore(el);
-					
-				}
 				
-				// Stick element to top
+				// Remove clone
+				if( $('.'+cloneClass).size() > 0 ) $('.'+cloneClass).remove();
+				
+				// Unstick element
 				el
 				.css({
-					'position': 'fixed',
-					'top': offset,
-					'left': left,
-					'width': el.width()
+					'position': 'static',
+					'top': 'auto',
+					'left': 'auto'
 				})
-				.addClass( class );
+				.removeClass( class );
 				
-				// Callback onStick
-				if ( typeof settings.onStick == 'function' && boolStuck )
+				// Callback onUnstick
+				if ( typeof settings.onUnstick == 'function' && boolUnstuck )
 				{
-					settings.onStick.call(this);
-					boolStuck = false;
+					settings.onUnstick.call(this);
+					boolUnstuck = false;
 				}
 				
-				// Enable other callbacks
-				boolUnstuck = true;
+				// Enable callback for sticking
+				boolStuck = true;
 				boolLimit = true;
+			
 			}
 		
 		}
-		// Unstick it !
-		else
-		{
-			
-			// Remove clone
-			if( $('.'+cloneClass).size() > 0 ) $('.'+cloneClass).remove();
-			
-			// Unstick element
-			el
-			.css({
-				'position': 'static',
-				'top': 'auto',
-				'left': 'auto'
-			})
-			.removeClass( class );
-			
-			// Callback onUnstick
-			if ( typeof settings.onUnstick == 'function' && boolUnstuck )
-			{
-				settings.onUnstick.call(this);
-				boolUnstuck = false;
-			}
-			
-			// Enable callback for sticking
-			boolStuck = true;
-			boolLimit = true;
 		
-		}
-	
 	});
 	
 };
