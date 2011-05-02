@@ -8,10 +8,7 @@ jQuery.fn.jStick = function( settings ) {
 	if ( typeof settings === 'undefined' ) var settings = {};
 	
 	var class =				( settings.class ) ? settings.class : 'stuck';
-	var shadow =			( settings.shadow ) ? settings.shadow : false;
 	var offset =			( settings.offset ) ? settings.offset : 0;
-	var opacityStuck =		( settings.opacity ) ? settings.opacity : 1;
-	var opacityUnstuck =	el.css('opacity');
 	var boolStuck = 		false;
 	var boolUnstuck = 		false;
 	var boolLimit =			true;
@@ -23,6 +20,7 @@ jQuery.fn.jStick = function( settings ) {
 	
 		if ( $(this).scrollTop() > top - offset )
 		{
+			// Limit reached
 			if ( limit && $(this).scrollTop() + offset + el.outerHeight() > limit )
 			{
 				// Fix element to the limit
@@ -30,8 +28,7 @@ jQuery.fn.jStick = function( settings ) {
 				.css({
 					'position': 'absolute',
 					'top': limit - el.outerHeight(),
-					'left': left,
-					'opacity': opacityStuck
+					'left': left
 				})
 				.addClass( class );
 				
@@ -46,6 +43,7 @@ jQuery.fn.jStick = function( settings ) {
 				boolStuck = true;
 				boolUnstuck = true;
 			}
+			// Stick it !
 			else
 			{
 				// Clone element
@@ -53,7 +51,7 @@ jQuery.fn.jStick = function( settings ) {
 					
 					el
 					.clone()
-					.addClass(cloneClass)
+					.addClass(cloneClass + ' ' + class)
 					.css({
 						'visibility':'hidden'
 					})
@@ -67,12 +65,9 @@ jQuery.fn.jStick = function( settings ) {
 					'position': 'fixed',
 					'top': offset,
 					'left': left,
-					'width': el.width(),
-					'opacity': opacityStuck
+					'width': el.width()
 				})
 				.addClass( class );
-				
-				if ( shadow ) el.css({ 'box-shadow': shadow });
 				
 				// Callback onStick
 				if ( typeof settings.onStick == 'function' && boolStuck )
@@ -87,6 +82,7 @@ jQuery.fn.jStick = function( settings ) {
 			}
 		
 		}
+		// Unstick it !
 		else
 		{
 			
@@ -98,9 +94,7 @@ jQuery.fn.jStick = function( settings ) {
 			.css({
 				'position': 'static',
 				'top': 'auto',
-				'left': 'auto',
-				'opacity': opacityUnstuck,
-				'box-shadow': ''
+				'left': 'auto'
 			})
 			.removeClass( class );
 			
