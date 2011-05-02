@@ -3,21 +3,22 @@
 	<head>
 		<title>jStick2Top</title>
 		<link rel="stylesheet" href="css/reset.css" />
-		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/style2.css" />
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/jquery.jstick.js"></script>
 		<script type="text/javascript" src="js/onload.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function(){
 			
-			$('#nav').jStick({
+			$('#sidebar').jStick({
 				opacity: .5,
 				shadow: '0 3px 3px #666',
 				offset: $('#top').height(),
 				limit: $('#footer').offset().top,
 				onStick: function(){ console.log('stuck'); },
 				onUnstick: function(){ console.log('unstuck'); },
-				onLimitReached: function(){ console.log('limit reached'); }
+				onLimitReached: function(){ console.log('limit reached'); },
+				cancelIfTooHigh: true
 			});
 		
 		});
@@ -27,8 +28,10 @@
 		
 		<div id="top"></div>
 		<div id="header">#header</div>
-		<div id="nav">#nav</div>
-		<div id="content">#content</div>
+		<div id="wrapper">
+			<div id="sidebar">#sidebar</div>
+			<div id="content">#content</div>
+		</div>
 		<div id="footer">#footer</div>
 	
 	</body>
