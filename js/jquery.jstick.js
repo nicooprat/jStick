@@ -3,6 +3,7 @@ jQuery.fn.jStick = function( settings ) {
 	// Setting variables
 	var el = $(this);
 	var top = el.offset().top;
+	var left = el.offset().left;
 	
 	if ( typeof settings === 'undefined' ) var settings = {};
 	
@@ -21,14 +22,14 @@ jQuery.fn.jStick = function( settings ) {
 	
 		if ( $(this).scrollTop() > top - offset )
 		{
-			if ( limit && $(this).scrollTop() + offset + el.height() > limit )
+			if ( limit && $(this).scrollTop() + offset + el.outerHeight() > limit )
 			{
 				// Fix element to the limit
 				el
 				.css({
 					'position': 'absolute',
-					'top': limit - el.height(),
-					'width': el.width(),
+					'top': limit - el.outerHeight(),
+					'left': left,
 					'opacity': opacityStuck
 				})
 				.addClass( class );
@@ -65,6 +66,7 @@ jQuery.fn.jStick = function( settings ) {
 				.css({
 					'position': 'fixed',
 					'top': offset,
+					'left': left,
 					'width': el.width(),
 					'opacity': opacityStuck
 				})
@@ -96,7 +98,7 @@ jQuery.fn.jStick = function( settings ) {
 			.css({
 				'position': 'static',
 				'top': 'auto',
-				'width': '',
+				'left': 'auto',
 				'opacity': opacityUnstuck,
 				'box-shadow': ''
 			})
