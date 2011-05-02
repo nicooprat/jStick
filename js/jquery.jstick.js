@@ -48,14 +48,13 @@ jQuery.fn.jStick = function( settings ) {
 			else
 			{
 				// Clone element
-				if( $('#the_clone').size() === 0 ) {
+				if( $('.the_clone').size() === 0 ) {
 					
 					el
 					.clone()
-					.attr('id','the_clone')
+					.addClass('the_clone')
 					.css({
-						'visibility':'hidden',
-						'height': el.height()
+						'visibility':'hidden'
 					})
 					.insertBefore(el);
 					
@@ -91,7 +90,7 @@ jQuery.fn.jStick = function( settings ) {
 		{
 			
 			// Remove clone
-			if( $('#the_clone').size() > 0 ) $('#the_clone').remove();
+			if( $('.the_clone').size() > 0 ) $('.the_clone').remove();
 			
 			// Unstick element
 			el
