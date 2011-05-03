@@ -169,6 +169,9 @@ jQuery.fn.jStick = function( settings ) {
 				'left': clone.offset().left
 			})
 		}
+		
+		// Callback onFreeze
+		if ( typeof opt.onFreeze == 'function' ) opt.onFreeze.call(this);
 	}
 	
 	this.unFreeze = function()
@@ -188,6 +191,9 @@ jQuery.fn.jStick = function( settings ) {
 				opt.frozen = false;
 			}
 		}
+		
+		// Callback onUnfreeze
+		if ( typeof opt.onUnfreeze == 'function' ) opt.onUnfreeze.call(this);
 	}
 	
 	// Make the plugin chainable
