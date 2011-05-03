@@ -14,7 +14,8 @@ jQuery.fn.jStick = function( settings ) {
 		hasReachedLimit:	false,
 		limit:				false,
 		cloneClass:			'the_clone',
-		cancelIfTooHigh:	true
+		cancelIfTooHigh:	true,
+		frozen:				false
 	};
 
 	var opt = jQuery.extend({}, defaults, settings);
@@ -22,8 +23,8 @@ jQuery.fn.jStick = function( settings ) {
 	// When user scrolls...
 	$(window).scroll(function() {
 	
-		// If the element isn't higher than the window...
-		if( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) {
+		// If the element isn't higher than the window, and the element hasn't been frozen...
+		if( ( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) && !opt.frozen ) {
 			
 			// If the window has been scrolled enough...
 			if ( $(this).scrollTop() > opt.top - opt.offset )
@@ -152,6 +153,41 @@ jQuery.fn.jStick = function( settings ) {
 	{
 		// The clone hasn't been created or has been removed
 		return ( typeof clone !== 'undefined' && clone.is(':visible') );
+	}
+	
+	this.freeze = function()
+	{
+		if( opt.isStuck )
+		{
+			opt.isStuck = false;
+			opt.frozen = true;
+			
+			clone
+			.css({
+				'position': 'absolute',
+				'top': clone.offset().top,
+				'left': clone.offset().left
+			})
+		}
+	}
+	
+	this.unFreeze = function()
+	{
+		if( !opt.isStuck && opt.frozen )
+		{
+			if( $(window).scrollTop() > opt.top - opt.offset )
+			{
+				stick();
+				opt.isStuck = true;
+				opt.frozen = false;
+			}
+			else
+			{
+				unStick();
+				opt.isUnstuck = true;
+				opt.frozen = false;
+			}
+		}
 	}
 	
 	// Make the plugin chainable
