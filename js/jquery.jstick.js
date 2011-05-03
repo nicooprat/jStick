@@ -147,4 +147,7 @@ jQuery.fn.jStick = function( settings ) {
 		return ( typeof clone !== 'undefined' && clone.is(':visible') );
 	}
 	
+	// Make the plugin chainable
+	return this;
+	
 };
