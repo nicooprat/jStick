@@ -5,56 +5,60 @@ jQuery.fn.jStick = function( settings ) {
 	var top = el.offset().top;
 	var left = el.offset().left;
 	
-	if ( typeof settings === 'undefined' ) var settings = {};
-	
-	var class =				( settings.class ) ? settings.class : 'stuck';
-	var offset =			( settings.offset ) ? settings.offset : 0;
-	var boolStuck = 		false;
-	var boolUnstuck = 		false;
-	var boolLimit =			true;
-	var limit =				( settings.limit ) ? settings.limit : false;
-	var cloneClass =		( settings.cloneClass ) ? settings.cloneClass : 'the_clone';
-	var cancelIfTooHigh =		( settings.cancelIfTooHigh ) ? settings.cancelIfTooHigh : true;
+	var defaults = { 
+		top:				el.offset().top,
+		left:				el.offset().left,
+		class:				'stuck',
+		offset:				0,
+		boolStuck:			false,
+		boolUnstuck:		false,
+		boolLimit:			true,
+		limit:				false,
+		cloneClass:			'the_clone',
+		cancelIfTooHigh:	true
+	};
+
+	var opt = jQuery.extend({}, defaults, settings);
 	
 	// When user scrolls...
 	$(window).scroll(function() {
 	
 		if( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) {
 		
-			if ( $(this).scrollTop() > top - offset )
+			if ( $(this).scrollTop() > opt.top - opt.offset )
 			{
 				// Limit reached
-				if ( limit && $(this).scrollTop() + offset + el.outerHeight() > limit )
+				if ( opt.limit && $(this).scrollTop() + opt.offset + el.outerHeight() > opt.limit )
 				{
 					// Fix element to the limit
 					el
 					.css({
 						'position': 'absolute',
-						'top': limit - el.outerHeight(),
-						'left': left
+						'top': opt.limit - el.outerHeight(),
+						'left': opt.left
 					})
-					.addClass( class );
+					.addClass( opt.class );
 					
 					// Callback onLimitReached
-					if ( typeof settings.onLimitReached == 'function' && boolLimit )
+					if ( typeof opt.onLimitReached == 'function' && opt.boolLimit )
 					{
-						settings.onLimitReached.call(this);
-						boolLimit = false;
+						opt.onLimitReached.call(this);
+						opt.boolLimit = false;
 					}
 						
 					// Enable other callbacks
-					boolStuck = true;
-					boolUnstuck = true;
+					opt.boolStuck = true;
+					opt.boolUnstuck = true;
 				}
 				// Stick it !
 				else
 				{
 					// Clone element
-					if( $('.'+cloneClass).size() === 0 ) {
+					if( $('.'+opt.cloneClass).size() === 0 ) {
 						
 						el
 						.clone()
-						.addClass(cloneClass + ' ' + class)
+						.addClass(opt.cloneClass + ' ' + opt.class)
 						.css({
 							'visibility':'hidden'
 						})
@@ -66,17 +70,17 @@ jQuery.fn.jStick = function( settings ) {
 					el
 					.css({
 						'position': 'fixed',
-						'top': offset,
-						'left': left,
-						'width': el.width()
+						'top': opt.offset,
+						'left': opt.left,
+						'width': el.css('width')
 					})
-					.addClass( class );
+					.addClass( opt.class );
 					
 					// Callback onStick
-					if ( typeof settings.onStick == 'function' && boolStuck )
+					if ( typeof opt.onStick == 'function' && opt.boolStuck )
 					{
-						settings.onStick.call(this);
-						boolStuck = false;
+						opt.onStick.call(this);
+						opt.boolStuck = false;
 					}
 					
 					// Enable other callbacks
@@ -90,27 +94,28 @@ jQuery.fn.jStick = function( settings ) {
 			{
 				
 				// Remove clone
-				if( $('.'+cloneClass).size() > 0 ) $('.'+cloneClass).remove();
+				if( $('.'+opt.cloneClass).size() > 0 ) $('.'+opt.cloneClass).remove();
 				
 				// Unstick element
 				el
 				.css({
 					'position': 'static',
 					'top': 'auto',
-					'left': 'auto'
+					'left': 'auto',
+					'width': ''
 				})
-				.removeClass( class );
+				.removeClass( opt.class );
 				
 				// Callback onUnstick
-				if ( typeof settings.onUnstick == 'function' && boolUnstuck )
+				if ( typeof opt.onUnstick == 'function' && opt.boolUnstuck )
 				{
-					settings.onUnstick.call(this);
-					boolUnstuck = false;
+					opt.onUnstick.call(this);
+					opt.boolUnstuck = false;
 				}
 				
 				// Enable callback for sticking
-				boolStuck = true;
-				boolLimit = true;
+				opt.boolStuck = true;
+				opt.boolLimit = true;
 			
 			}
 		
