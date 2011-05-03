@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>jStick2Top</title>
+		<link rel="stylesheet" href="css/reset.css" />
+		<link rel="stylesheet" href="css/style3.css" />
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.jstick.js"></script>
+		<script type="text/javascript" src="js/onload.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			
+			$('#nav:first').jStick({
+				offset: $('#top').height(),
+				limit: $('#footer').offset().top - $('#nav2').height()
+			});
+			
+			$('#nav2:first').jStick({
+				offset: $('#top').height() + $('#nav').height(),
+				limit: $('#footer').offset().top
+			});
+		
+		});
+		</script>
+	</head>
+	<body>
+		
+		<div id="top"></div>
+		<div id="header">#header</div>
+		<div id="nav">#nav</div>
+		<div id="content">#content</div>
+		<div id="nav2">#nav2</div>
+		<div id="content2">#content2</div>
+		<div id="footer">#footer</div>
+	
+	</body>
+</html>

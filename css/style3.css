@@ -40,6 +40,7 @@
 }
 
 #nav {
+	width: 100%;
 	height: 50px;
 	background: black;
 	z-index: 2;
@@ -49,7 +50,24 @@
 	opacity: .5;
 }
 
+#nav2 {
+	width: 100%;
+	height: 50px;
+	background: black;
+	z-index: 2;
+}
+
+#nav2.stuck {
+	opacity: .5;
+}
+
 #content {
+	height: 550px;
+	padding: 150px 0 0 0;
+	background: url(img/grain.png);
+}
+
+#content2 {
 	height: 550px;
 	padding: 150px 0 0 0;
 	background: url(img/grain.png);
@@ -62,7 +80,7 @@
 	border-top: 1px solid #333;
 }
 
-#header , #nav , #content , #footer {
+#header , #nav , #content , #footer, #nav2, #content2 {
 	font-family: Georgia;
 	font-size: 24px;
 	line-height: 50px;
