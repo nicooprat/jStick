@@ -9,9 +9,9 @@ jQuery.fn.jStick = function( settings ) {
 		left:				el.offset().left,
 		class:				'stuck',
 		offset:				0,
-		boolStuck:			false,
-		boolUnstuck:		false,
-		boolLimit:			true,
+		isStuck:			false,
+		isUnstuck:			false,
+		hasReachedLimit:	false,
 		limit:				false,
 		cloneClass:			'the_clone',
 		cancelIfTooHigh:	true
@@ -22,21 +22,23 @@ jQuery.fn.jStick = function( settings ) {
 	// When user scrolls...
 	$(window).scroll(function() {
 	
+		// If the element isn't higher than the window...
 		if( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) {
-		
+			
+			// If the window has been scrolled enough...
 			if ( $(this).scrollTop() > opt.top - opt.offset )
 			{
 					
 				// Limit reached
 				if ( opt.limit && ( $(this).scrollTop() + opt.offset + el.outerHeight() > opt.limit ) )
 				{
-					reachLimit();
+					if( !opt.hasReachedLimit ) reachLimit();
 				}
 				
 				// Stick it !
 				else
 				{
-					stick();
+					if( !opt.isStuck ) stick();
 				}
 			
 			}
@@ -44,7 +46,7 @@ jQuery.fn.jStick = function( settings ) {
 			// Unstick it !
 			else
 			{
-				unStick();
+				if( !opt.isUnstuck ) unStick();
 			}
 			
 		}
@@ -53,11 +55,12 @@ jQuery.fn.jStick = function( settings ) {
 	
 	function stick()
 	{
-	
+		
+		// Clone element
 		cloneIt();
 	
 		// Stick element to top
-		el
+		clone
 		.css({
 			'position': 'fixed',
 			'top': opt.offset,
@@ -67,15 +70,12 @@ jQuery.fn.jStick = function( settings ) {
 		.addClass( opt.class );
 		
 		// Callback onStick
-		if ( typeof opt.onStick == 'function' && opt.boolStuck )
-		{
-			opt.onStick.call(this);
-			opt.boolStuck = false;
-		}
+		if ( typeof opt.onStick == 'function' ) opt.onStick.call(this);
 		
 		// Enable other callbacks
-		boolUnstuck = true;
-		boolLimit = true;
+		opt.isUnstuck = false;
+		opt.hasReachedLimit = false;
+		opt.isStuck = true;
 	
 	}
 	
@@ -83,75 +83,68 @@ jQuery.fn.jStick = function( settings ) {
 	{
 				
 		// Remove clone
-		if( typeof clone != 'undefined' && clone.size() > 0 ) clone.remove();
+		if( cloneExists() ) clone.remove();
 		
 		// Unstick element
-		el
-		.css({
-			'position': 'static',
-			'top': 'auto',
-			'left': 'auto',
-			'width': ''
-		})
-		.removeClass( opt.class );
+		el.removeClass( opt.class );
 		
 		// Callback onUnstick
-		if ( typeof opt.onUnstick == 'function' && opt.boolUnstuck )
-		{
-			opt.onUnstick.call(this);
-			opt.boolUnstuck = false;
-		}
+		if ( typeof opt.onUnstick == 'function' ) opt.onUnstick.call(this);
 		
 		// Enable callback for sticking
-		opt.boolStuck = true;
-		opt.boolLimit = true;
+		opt.isStuck = false;
+		opt.hasReachedLimit = false;
+		opt.isUnstuck = true;
 	
 	}
 	
 	function reachLimit()
 	{
 		
+		// Clone element
 		cloneIt();
 		
 		// Fix element to the limit
-		el
+		clone
 		.css({
 			'position': 'absolute',
 			'top': opt.limit - el.outerHeight(),
 			'left': opt.left
 		})
-		.addClass( opt.class );
+		.removeClass( opt.class );
 		
 		// Callback onLimitReached
-		if ( typeof opt.onLimitReached == 'function' && opt.boolLimit )
-		{
-			opt.onLimitReached.call(this);
-			opt.boolLimit = false;
-		}
+		if ( typeof opt.onLimitReached == 'function' ) opt.onLimitReached.call(this);
 			
 		// Enable other callbacks
-		opt.boolStuck = true;
-		opt.boolUnstuck = true;
+		opt.isStuck = false;
+		opt.isUnstuck = false;
+		opt.hasReachedLimit = true;
 		
 	}
 	
 	function cloneIt()
 	{
 	
-		// Clone element
-		
-		if( typeof clone == 'undefined' || !clone.is(':visible') ) {
+		// If the clone doesn't already exists...
+		if( !cloneExists() ) {
 			
 			clone = el
 			.clone()
 			.addClass( opt.cloneClass )
-			.css({
+			.insertAfter(el);
+			
+			el.css({
 				'visibility':'hidden'
 			})
-			.insertBefore(el);
 			
 		}
 	
+	}
+	
+	function cloneExists()
+	{
+		return ( typeof clone !== 'undefined' && clone.is(':visible') );
 	}
 	
 };
