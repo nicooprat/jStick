@@ -10,14 +10,20 @@
 		<script type="text/javascript">
 		$(document).ready(function(){
 			
-			$('#nav:first').jStick({
+			$('#nav').jStick({
 				offset: $('#top').height(),
 				limit: $('#footer').offset().top - $('#nav2').height()
 			});
 			
-			$('#nav2:first').jStick({
+			var test = $('#nav2').jStick({
 				offset: $('#top').height() + $('#nav').height(),
 				limit: $('#footer').offset().top
+			});
+			
+			$('#content2').toggle(function(){
+				test.freeze();
+			},function(){
+				test.unFreeze();
 			});
 		
 		});
