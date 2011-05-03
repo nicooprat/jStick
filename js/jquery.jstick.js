@@ -1,21 +1,21 @@
 jQuery.fn.jStick = function( settings ) {
 	
 	// Setting variables
-	var el = $(this);
+	var el = 				$(this);
 	var clone;
+	var top =				el.offset().top;
+	var left =				el.offset().left;
+	var isStuck =			false;
+	var isUnstuck =			false;
+	var hasReachedLimit =	false;
+	var frozen =			false;
 	
 	var defaults = { 
-		top:				el.offset().top,
-		left:				el.offset().left,
 		class:				'stuck',
 		offset:				0,
-		isStuck:			false,
-		isUnstuck:			false,
-		hasReachedLimit:	false,
 		limit:				false,
 		cloneClass:			'the_clone',
-		cancelIfTooHigh:	true,
-		frozen:				false
+		cancelIfTooHigh:	true
 	};
 
 	var opt = jQuery.extend({}, defaults, settings);
@@ -24,22 +24,22 @@ jQuery.fn.jStick = function( settings ) {
 	$(window).scroll(function() {
 	
 		// If the element isn't higher than the window, and the element hasn't been frozen...
-		if( ( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) && !opt.frozen ) {
+		if( ( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) && !frozen ) {
 			
 			// If the window has been scrolled enough...
-			if ( $(this).scrollTop() > opt.top - opt.offset )
+			if ( $(this).scrollTop() > top - opt.offset )
 			{
 					
 				// Limit reached
 				if ( opt.limit && ( $(this).scrollTop() + opt.offset + el.outerHeight() > opt.limit ) )
 				{
-					if( !opt.hasReachedLimit ) reachLimit();
+					if( !hasReachedLimit ) reachLimit();
 				}
 				
 				// Stick it !
 				else
 				{
-					if( !opt.isStuck ) stick();
+					if( !isStuck ) stick();
 				}
 			
 			}
@@ -47,7 +47,7 @@ jQuery.fn.jStick = function( settings ) {
 			// Unstick it !
 			else
 			{
-				if( !opt.isUnstuck ) unStick();
+				if( !isUnstuck ) unStick();
 			}
 			
 		}
@@ -65,7 +65,7 @@ jQuery.fn.jStick = function( settings ) {
 		.css({
 			'position': 'fixed',
 			'top': opt.offset,
-			'left': opt.left,
+			'left': left,
 			'width': el.css('width')
 		})
 		.addClass( opt.class );
@@ -74,9 +74,9 @@ jQuery.fn.jStick = function( settings ) {
 		if ( typeof opt.onStick == 'function' ) opt.onStick.call(this);
 		
 		// Enable other callbacks
-		opt.isUnstuck = false;
-		opt.hasReachedLimit = false;
-		opt.isStuck = true;
+		isUnstuck = false;
+		hasReachedLimit = false;
+		isStuck = true;
 	
 	}
 	
@@ -97,9 +97,9 @@ jQuery.fn.jStick = function( settings ) {
 		if ( typeof opt.onUnstick == 'function' ) opt.onUnstick.call(this);
 		
 		// Enable callback for sticking
-		opt.isStuck = false;
-		opt.hasReachedLimit = false;
-		opt.isUnstuck = true;
+		isStuck = false;
+		hasReachedLimit = false;
+		isUnstuck = true;
 	
 	}
 	
@@ -114,7 +114,7 @@ jQuery.fn.jStick = function( settings ) {
 		.css({
 			'position': 'absolute',
 			'top': opt.limit - el.outerHeight(),
-			'left': opt.left
+			'left': left
 		})
 		.removeClass( opt.class );
 		
@@ -122,9 +122,9 @@ jQuery.fn.jStick = function( settings ) {
 		if ( typeof opt.onLimitReached == 'function' ) opt.onLimitReached.call(this);
 			
 		// Enable other callbacks
-		opt.isStuck = false;
-		opt.isUnstuck = false;
-		opt.hasReachedLimit = true;
+		isStuck = false;
+		isUnstuck = false;
+		hasReachedLimit = true;
 		
 	}
 	
@@ -157,10 +157,10 @@ jQuery.fn.jStick = function( settings ) {
 	
 	this.freeze = function()
 	{
-		if( opt.isStuck )
+		if( isStuck )
 		{
-			opt.isStuck = false;
-			opt.frozen = true;
+			isStuck = false;
+			frozen = true;
 			
 			clone
 			.css({
@@ -176,19 +176,19 @@ jQuery.fn.jStick = function( settings ) {
 	
 	this.unFreeze = function()
 	{
-		if( !opt.isStuck && opt.frozen )
+		if( !isStuck && frozen )
 		{
-			if( $(window).scrollTop() > opt.top - opt.offset )
+			if( $(window).scrollTop() > top - opt.offset )
 			{
 				stick();
-				opt.isStuck = true;
-				opt.frozen = false;
+				isStuck = true;
+				frozen = false;
 			}
 			else
 			{
 				unStick();
-				opt.isUnstuck = true;
-				opt.frozen = false;
+				isUnstuck = true;
+				frozen = false;
 			}
 		}
 		
