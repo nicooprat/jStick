@@ -86,7 +86,11 @@ jQuery.fn.jStick = function( settings ) {
 		if( cloneExists() ) clone.remove();
 		
 		// Unstick element
-		el.removeClass( opt.class );
+		el
+		.css({
+			'visibility': ''
+		})
+		.removeClass( opt.class );
 		
 		// Callback onUnstick
 		if ( typeof opt.onUnstick == 'function' ) opt.onUnstick.call(this);
@@ -129,11 +133,13 @@ jQuery.fn.jStick = function( settings ) {
 		// If the clone doesn't already exists...
 		if( !cloneExists() ) {
 			
+			// Create a clone from the element
 			clone = el
 			.clone()
 			.addClass( opt.cloneClass )
 			.insertAfter(el);
 			
+			// Hide the element
 			el.css({
 				'visibility':'hidden'
 			})
@@ -144,6 +150,7 @@ jQuery.fn.jStick = function( settings ) {
 	
 	function cloneExists()
 	{
+		// The clone hasn't been created or has been removed
 		return ( typeof clone !== 'undefined' && clone.is(':visible') );
 	}
 	
