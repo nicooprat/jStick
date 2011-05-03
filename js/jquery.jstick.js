@@ -22,9 +22,11 @@ jQuery.fn.jStick = function( settings ) {
 	
 	// When user scrolls...
 	$(window).scroll(function() {
-	
+
+		update();
+		
 		// If the element isn't higher than the window, and the element hasn't been frozen...
-		if( ( ( el.outerHeight() < $(window).height() ) || !cancelIfTooHigh ) && !frozen ) {
+		if( isSmaller() && !frozen ) {
 			
 			// If the window has been scrolled enough...
 			if ( $(this).scrollTop() > top - opt.offset )
@@ -54,6 +56,8 @@ jQuery.fn.jStick = function( settings ) {
 		
 	});
 	
+	$(window).resize(update);
+	
 	function stick()
 	{
 		
@@ -66,7 +70,7 @@ jQuery.fn.jStick = function( settings ) {
 			'position': 'fixed',
 			'top': opt.offset,
 			'left': left,
-			'width': el.css('width')
+			'width': el.outerWidth()
 		})
 		.addClass( opt.class );
 		
@@ -153,6 +157,32 @@ jQuery.fn.jStick = function( settings ) {
 	{
 		// The clone hasn't been created or has been removed
 		return ( typeof clone !== 'undefined' && clone.is(':visible') );
+	}
+	
+	function isSmaller()
+	{
+		return ( ( el.outerHeight() < $(window).height() ) || !opt.cancelIfTooHigh );
+	}
+	
+	function update()
+	{
+		if( isStuck && !isSmaller() )
+		{
+			unStick();
+		}
+		
+		if( !hasReachedLimit && cloneExists() )
+		{
+			top = el.offset().top;
+			left = el.offset().left;
+			
+			clone
+			.css({
+				'top': opt.offset,
+				'left': left,
+				'width': el.outerWidth()
+			});
+		}
 	}
 	
 	this.freeze = function()
