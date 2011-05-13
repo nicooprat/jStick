@@ -11,7 +11,7 @@ jQuery.fn.jStick = function( settings ) {
 	var frozen =			false;
 	
 	var defaults = { 
-		class:				'stuck',
+		targetClass:			'stuck',
 		offset:				0,
 		limit:				false,
 		cloneClass:			'the_clone',
@@ -72,7 +72,7 @@ jQuery.fn.jStick = function( settings ) {
 			'left': left,
 			'width': el.outerWidth()
 		})
-		.addClass( opt.class );
+		.addClass( opt.targetClass );
 		
 		// Callback onStick
 		if ( typeof opt.onStick == 'function' ) opt.onStick.call(this);
@@ -95,7 +95,7 @@ jQuery.fn.jStick = function( settings ) {
 		.css({
 			'visibility': ''
 		})
-		.removeClass( opt.class );
+		.removeClass( opt.targetClass );
 		
 		// Callback onUnstick
 		if ( typeof opt.onUnstick == 'function' ) opt.onUnstick.call(this);
@@ -120,7 +120,7 @@ jQuery.fn.jStick = function( settings ) {
 			'top': opt.limit - el.outerHeight(),
 			'left': left
 		})
-		.removeClass( opt.class );
+		.removeClass( opt.targetClass );
 		
 		// Callback onLimitReached
 		if ( typeof opt.onLimitReached == 'function' ) opt.onLimitReached.call(this);
